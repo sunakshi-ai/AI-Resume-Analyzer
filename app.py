@@ -6,6 +6,7 @@ from utils.ats_score import calculate_ats_score
 from utils.missing_skills import get_missing_skills
 from utils.suggestions import resume_suggestions
 from utils.charts import skills_chart
+from utils.job_match import calculate_match
 
 
 # ---------------- PAGE SETTINGS ---------------- #
@@ -123,3 +124,35 @@ if uploaded_file is not None:
             st.info(tip)
     else:
         st.success("Excellent! No Suggestions Required.")
+
+st.subheader("💼 Job Description Matching")
+
+job_description = st.text_area(
+    "💼 Paste Job Description",
+    height=200
+)
+
+if job_description:
+
+    match_score = calculate_match(
+        text,
+        job_description
+    )
+
+    st.subheader("💼 Resume Match Score")
+
+    st.progress(match_score / 100)
+
+    st.metric(
+        "Match %",
+        f"{match_score}%"
+    )
+
+    if match_score >= 80:
+        st.success("Excellent Match 🎉")
+
+    elif match_score >= 60:
+        st.warning("Good Match 👍")
+
+    else:
+        st.error("Low Match ❌")        
